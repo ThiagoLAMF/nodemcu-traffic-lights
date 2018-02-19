@@ -85,18 +85,14 @@ srv:listen(80,function(conn)
     conn:on("receive", function(client,request)
         local buf = "";
         
-        buf = buf ..'<!DOCTYPE html><html lang="en">';
-        buf = buf ..'<head><meta charset="utf-8" />';
-        buf = buf .."<title>Traffic light</title></head>";
-        buf = buf .."<body><p>id: </p>";
-        buf = buf .."<p>status:" .. status .. "</p>";
-        buf = buf .."<p>lastUpdate:" .. lastUpdate .. "</p>";
-        buf = buf .."<p>timeRed:" .. timeRed .. "</p>";
-        buf = buf .."<p>timeYellow:" .. timeYellow .. "</p>";
-        buf = buf .."<p>timeGreen:" .. timeGreen .. "</p>";
-        buf = buf .."</body></html>";
+        buf = buf .. '{"id":"",';
+        buf = buf .. '"status":"' .. status .. '",';
+        buf = buf .. '"lastUpdate":"' .. lastUpdate .. '",';
+        buf = buf .. '"timeRed":"' .. timeRed .. '",';
+        buf = buf .. '"timeYellow":"' .. timeYellow .. '",';
+        buf = buf .. '"timeGreen":"' .. timeGreen .. '"}';
         
-
+        client:send("HTTP/1.0 200 OK\r\nContent-Type: application/json\r\nCache-Control: private, no-store\r\n\r\n");
         client:send(buf);
         --client:close();
         --collectgarbage();
