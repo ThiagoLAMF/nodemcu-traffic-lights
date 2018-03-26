@@ -88,15 +88,17 @@ srv:listen(80,function(conn)
         buf = buf .. '{"id":"",';
         buf = buf .. '"status":"' .. status .. '",';
         buf = buf .. '"lastUpdate":"' .. lastUpdate .. '",';
+	buf = buf .. '"now":"' ..  tmr.time() .. '",';
         buf = buf .. '"timeRed":"' .. timeRed .. '",';
         buf = buf .. '"timeYellow":"' .. timeYellow .. '",';
         buf = buf .. '"timeGreen":"' .. timeGreen .. '"}';
         
-        client:send("HTTP/1.0 200 OK\r\nContent-Type: application/json\r\nCache-Control: private, no-store\r\n\r\n");
+        client:send("HTTP/1.0 200 OK\r\nAccess-Control-Allow-Origin:*\r\nContent-Type: application/json\r\nCache-Control: private, no-store\r\n\r\n");
         client:send(buf);
         --client:close();
         --collectgarbage();
     end)
+   conn:on("sent",function(conn) conn:close() end)
 end)
 
 
