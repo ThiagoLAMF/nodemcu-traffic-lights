@@ -84,7 +84,7 @@ srv=net.createServer(net.TCP)
 srv:listen(80,function(conn)
     conn:on("receive", function(client,request)
         local buf = "";
-        
+        -- JSON
         buf = buf .. '{"id":"",';
         buf = buf .. '"status":"' .. status .. '",';
         buf = buf .. '"lastUpdate":"' .. lastUpdate .. '",';
@@ -93,6 +93,16 @@ srv:listen(80,function(conn)
         buf = buf .. '"timeYellow":"' .. timeYellow .. '",';
         buf = buf .. '"timeGreen":"' .. timeGreen .. '"}';
         
+
+	--[[EDN
+	buf = buf .. '{';
+        buf = buf .. ':status ' .. status .. ' ';
+        buf = buf .. ':lastUpdate ' .. lastUpdate .. ' ';
+	buf = buf .. ':now ' ..  tmr.time() .. ' ';
+        buf = buf .. ':timeRed ' .. timeRed .. ' ';
+        buf = buf .. ':timeYellow ' .. timeYellow .. ' ';
+        buf = buf .. ':timeGreen ' .. timeGreen .. '}';]]
+
         client:send("HTTP/1.0 200 OK\r\nAccess-Control-Allow-Origin:*\r\nContent-Type: application/json\r\nCache-Control: private, no-store\r\n\r\n");
         client:send(buf);
         --client:close();

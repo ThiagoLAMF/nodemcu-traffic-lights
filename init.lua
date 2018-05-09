@@ -4,6 +4,7 @@ dofile("credentials.lua")
 init = true
 
 function startup()
+    print("Hello")
     if file.open("init.lua") == nil then
         print("init.lua deleted or renamed")
     else
@@ -71,7 +72,16 @@ wifi.eventmon.register(wifi.eventmon.STA_GOT_IP, wifi_got_ip_event)
 wifi.eventmon.register(wifi.eventmon.STA_DISCONNECTED, wifi_disconnect_event)
 
 print("Connecting to WiFi access point...")
-wifi.setmode(wifi.STATION)
--- wifi.sta.config(SSID,PASSWORD)
+wifi.setmode(wifi.STATIONAP)
+--wifi.sta.config(SSID,PASSWORD)
+-- Setting AP:
+wifi.ap.config {ssid="ESP8266AP",pwd="password1"}
 wifi.sta.config {ssid=SSID, pwd=PASSWORD}
 -- wifi.sta.connect() not necessary because config() uses auto-connect=true by default
+
+
+--print("Startup will resume momentarily, you have 5 seconds to abort.")
+--print("You can stop the application from running by setting the var 'init' to false.")
+--print("Waiting...") 
+--tmr.create():alarm(5000, tmr.ALARM_SINGLE, startup)
+
