@@ -14,6 +14,8 @@ pRed = 8; --D8
 ]]
 status = 0; -- initial state for the traffic light (red)
 
+userIsCrossing = 0;
+
 -- total time in miliseconds the lights will stay on 
 timeRed = 5000; 
 timeYellow = 2000; 
@@ -46,6 +48,9 @@ function get_state_time()
 	elseif(status == 1 or status == 3) then
 		return timeYellow;
 	elseif(status == 2) then
+		if (userIsCrossing > 0) then
+			return timeGreen/4;
+		end
 		return timeGreen;
 	end
 end
@@ -60,8 +65,14 @@ function refresh_lights()
 	elseif(status == 2) then
 		turn_off(pYellow);
 		turn_on(pGreen);
+		
+		if(userIsCrossing > 2) then
+			userIsCrossing = 0;
+		elseif(userIsCrossing >= 1) then
+			userIsCrossing = userIsCrossing + 1;
+		end
 	elseif(status == 3) then
-		turn_off(pGreen)
+		turn_off(pGreen);
 		turn_on(pYellow);
 	end
 	status = ((status + 1) % 4); --updates the state of the traffic light
@@ -84,11 +95,30 @@ srv=net.createServer(net.TCP)
 srv:listen(80,function(conn)
     conn:on("receive", function(client,request)
         local buf = "";
+        
+        -- Get parameters from GET request:
+        local _, _, method, path, vars = string.find(request, "([A-Z]+) (.+)?(.+) HTTP");
+        if(method == nil)then
+            _, _, method, path = string.find(request, "([A-Z]+) (.+) HTTP");
+        end
+        local _GET = {}
+        if (vars ~= nil)then
+            for k, v in string.gmatch(vars, "(%w+)=(%w+)&*") do
+                _GET[k] = v
+            end
+        end
+
+		if(_GET.status == "2") then -- user wants to cross
+			-- Lower the time the light stays in green
+			-- The light will reduce green time for 2 periods
+			userIsCrossing = 1; --starts the counter
+			print("User is crossing!");
+        end
         -- JSON
         buf = buf .. '{"id":"",';
         buf = buf .. '"status":"' .. status .. '",';
         buf = buf .. '"lastUpdate":"' .. lastUpdate .. '",';
-	buf = buf .. '"now":"' ..  tmr.time() .. '",';
+		buf = buf .. '"now":"' ..  tmr.time() .. '",';
         buf = buf .. '"timeRed":"' .. timeRed .. '",';
         buf = buf .. '"timeYellow":"' .. timeYellow .. '",';
         buf = buf .. '"timeGreen":"' .. timeGreen .. '"}';
@@ -113,3 +143,4 @@ end)
 
 
 print("Server started!");
+
