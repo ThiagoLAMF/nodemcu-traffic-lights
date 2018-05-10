@@ -1,6 +1,6 @@
 # nodemcu-traffic-lights
 
-Simple traffick light script for the nodemcu firmware.
+Simple traffic light script for the nodemcu firmware.
 
 1. Instalar drivers:
 
