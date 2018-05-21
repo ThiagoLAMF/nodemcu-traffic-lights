@@ -86,6 +86,22 @@ function update_lights_callback()
 	mytimer:start(); -- starts the timer
 end
 
+function refresh_light_color(color)
+	turn_off(pRed);
+	turn_off(pGreen);
+	turn_off(pYellow);
+	print("refresh");
+	print(color);
+	if(color == 0) then
+		turn_on(pRed);
+	elseif(color ==1 ) then
+		turn_on(pYellow);
+	elseif (color == 2) then
+		turn_on(pGreen);
+	end
+
+end
+
 -- initiates the sequence:
 update_lights_callback();
 
@@ -108,12 +124,20 @@ srv:listen(80,function(conn)
             end
         end
 
-		if(_GET.status == "2") then -- user wants to cross
+		--if(_GET.status == "2") then -- user wants to cross
 			-- Lower the time the light stays in green
 			-- The light will reduce green time for 2 periods
-			userIsCrossing = 1; --starts the counter
-			print("User is crossing!");
+		--	userIsCrossing = 1; --starts the counter
+		--	print("User is crossing!");
+        --end
+        
+        if _GET.status ~= nil and (tonumber(_GET.status) == 99) then
+        	mytimer:start(); -- starts the timer
+        elseif(_GET.status ~= nil and tonumber(_GET.status) >= 0) then
+        	mytimer:stop();
+        	refresh_light_color(tonumber(_GET.status));
         end
+
         -- JSON
         buf = buf .. '{"id":"",';
         buf = buf .. '"status":"' .. status .. '",';
