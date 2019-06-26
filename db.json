@@ -1,12 +1,11 @@
-
-
 {
-  "traffic": 
-    {"id":"1212",
-      "status":"1",
-      "lastUpdate":"100",
-      "now":"101",
-      "timeRed":"50",
-      "timeYellow":"50",
-      "timeGreen":"50"}
+  "traffic": {
+    "id": "1212",
+    "status": "1",
+    "lastUpdate": "100",
+    "now": "101",
+    "timeRed": "50",
+    "timeYellow": "50",
+    "timeGreen": "50"
+  }
 }
