@@ -1,7 +1,7 @@
 
 
 {
-  "traffic-light": {
+  "traffic-light": 
     {"id":"1212",
       "status":"1",
       "lastUpdate":"100",
