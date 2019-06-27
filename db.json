@@ -6,6 +6,8 @@
     "now": "101",
     "timeRed": "50",
     "timeYellow": "50",
-    "timeGreen": "50"
+    "timeGreen": "50",
+    "latitude":"-18.906147",
+    "longitude:"-48.266163"
   }
 }
